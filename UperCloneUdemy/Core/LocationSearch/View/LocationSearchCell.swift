@@ -8,8 +8,33 @@
 import SwiftUI
 
 struct LocationSearchCell: View {
+    var title = ""
+    var subTitle = ""
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack{
+            
+            Image(systemName: "mappin.circle.fill")
+                .resizable()
+                .foregroundColor(.cyan)
+                .accentColor(.white)
+                .frame(width: 30, height: 30)
+
+            
+            VStack(alignment: .leading,spacing: 4){
+                Text(title)
+                    .font(.caption)
+                    
+                
+                Text(subTitle)
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+                
+                Divider()
+            }
+            .padding(.leading)
+            .padding(.vertical)
+        }
+        .padding(.leading)
     }
 }
 

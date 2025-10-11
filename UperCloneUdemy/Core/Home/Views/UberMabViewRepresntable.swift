@@ -11,6 +11,7 @@ import MapKit
 struct UberMabViewRepresntable:UIViewRepresentable{//dah protocol lel uikit integration fe el swiftui
     let mapView = MKMapView()
     let locationManager = LocationManager()//hanupdate meno el location
+    @EnvironmentObject var viewModel: LoactionSearchVM//nafs instance el viewModel ely ma3molha inject fe el APP we shayla nafs el data men LocationSearchView..HWA HENA BEYLISTEN LEL VM CHANGES
     
     func makeUIView(context: Context) -> MKMapView {
         mapView.delegate = context.coordinator //elcontext dah zay el self
@@ -20,7 +21,11 @@ struct UberMabViewRepresntable:UIViewRepresentable{//dah protocol lel uikit inte
         return mapView
     }
     
-    func updateUIView(_ view: MKMapView, context: Context) {
+    func updateUIView(_ view: MKMapView, context: Context) {//beytnada 3ala el func deh ma3a kol update lel view
+        if let selectedLocationCoordinate = viewModel.selectedLocationCoordinate{
+            context.coordinator.addAndSelectAnnotation(coordinate: selectedLocationCoordinate)
+            context.coordinator.configurePlyline(distenationCoordinates: selectedLocationCoordinate)
+        }
         
     }
     
@@ -32,19 +37,60 @@ struct UberMabViewRepresntable:UIViewRepresentable{//dah protocol lel uikit inte
 extension UberMabViewRepresntable{
     class MapCoordinator:NSObject,MKMapViewDelegate{//el fekra hena en UberMabViewRepresntable haykon leh access lel MKMapViewDelegate
         let parent:UberMabViewRepresntable//to communicate with the UberMabViewRepresntable from here
+        var userLocationCoordinate:CLLocationCoordinate2D?
         
         init(parent:UberMabViewRepresntable) {
             self.parent = parent
             super.init()
         }
         
+        func addAndSelectAnnotation(coordinate:CLLocationCoordinate2D) {
+            parent.mapView.removeAnnotations(parent.mapView.annotations)//hayshel ay annotaion men el map abl may7ot geded
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = coordinate
+            parent.mapView.addAnnotation(annotation)
+            parent.mapView.selectAnnotation(annotation, animated: true)
+            parent.mapView.showAnnotations(parent.mapView.annotations, animated: true)
+        }
+        
         func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+            userLocationCoordinate = userLocation.coordinate
             let region = MKCoordinateRegion(
                 center: CLLocationCoordinate2D(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude),
                 span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
             parent.mapView.setRegion(region, animated: true)//men el parent ely shayel mapview ha3melo setRegion
         }
         
+        func mapView(_ mapView: MKMapView, rendererFor overlay: any MKOverlay) -> MKOverlayRenderer {
+            let polyline = MKPolylineRenderer(overlay: overlay)
+            polyline.strokeColor = .blue
+            polyline.lineWidth = 5
+            return polyline
+        }
+        
+        func getDestinationRoute(
+            from userLocation:CLLocationCoordinate2D,
+            to destinationLocation:CLLocationCoordinate2D,
+            complition: @escaping (MKRoute) -> Void){
+                let userPlaceMark = MKPlacemark(coordinate: userLocation)
+                let destinationPlaceMark = MKPlacemark(coordinate: destinationLocation)
+                let request = MKDirections.Request()
+                request.source = MKMapItem(placemark: userPlaceMark)
+                request.destination = MKMapItem(placemark: destinationPlaceMark)
+                request.transportType = .automobile
+                let directions = MKDirections(request: request)
+                directions.calculate() { (response, error) in
+                    guard let route = response?.routes.first else { return }
+                    complition(route)
+                }
+         }
+        
+        func configurePlyline(distenationCoordinates:CLLocationCoordinate2D){
+            guard let userLocationCoordinate = userLocationCoordinate else{return}
+            getDestinationRoute(from: userLocationCoordinate, to: distenationCoordinates) { route in
+                self.parent.mapView.addOverlay(route.polyline)
+            }
+        }
         
     }
 }

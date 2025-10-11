@@ -11,7 +11,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		1E32C3802E968D73005366A6 /* UperCloneUdemy */ = {
+		1E32C3A02E968DDC005366A6 /* UperCloneUdemy */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = UperCloneUdemy;
 			sourceTree = "<group>";
@@ -32,7 +32,7 @@
 		1E32C3752E968D73005366A6 = {
 			isa = PBXGroup;
 			children = (
-				1E32C3802E968D73005366A6 /* UperCloneUdemy */,
+				1E32C3A02E968DDC005366A6 /* UperCloneUdemy */,
 				1E32C37F2E968D73005366A6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -61,7 +61,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				1E32C3802E968D73005366A6 /* UperCloneUdemy */,
+				1E32C3A02E968DDC005366A6 /* UperCloneUdemy */,
 			);
 			name = UperCloneUdemy;
 			packageProductDependencies = (
@@ -254,6 +254,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"UperCloneUdemy/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location for the app usage";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -282,6 +283,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"UperCloneUdemy/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location for the app usage";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
