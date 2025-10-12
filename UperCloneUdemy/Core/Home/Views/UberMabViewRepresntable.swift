@@ -13,6 +13,8 @@ struct UberMabViewRepresntable:UIViewRepresentable{//dah protocol lel uikit inte
     let locationManager = LocationManager()//hanupdate meno el location
     @EnvironmentObject var viewModel: LoactionSearchVM//nafs instance el viewModel ely ma3molha inject fe el APP we shayla nafs el data men LocationSearchView..HWA HENA BEYLISTEN LEL VM CHANGES
     
+    @Binding var mapState: MapViewState
+    
     func makeUIView(context: Context) -> MKMapView {
         mapView.delegate = context.coordinator //elcontext dah zay el self
         mapView.isRotateEnabled = false
@@ -22,11 +24,18 @@ struct UberMabViewRepresntable:UIViewRepresentable{//dah protocol lel uikit inte
     }
     
     func updateUIView(_ view: MKMapView, context: Context) {//beytnada 3ala el func deh ma3a kol update lel view
-        if let selectedLocationCoordinate = viewModel.selectedLocationCoordinate{
-            context.coordinator.addAndSelectAnnotation(coordinate: selectedLocationCoordinate)
-            context.coordinator.configurePlyline(distenationCoordinates: selectedLocationCoordinate)
-        }
         
+        switch mapState{
+        case .noInput:
+            context.coordinator.clearAndCenterMapview()
+        case .searchingLocation:
+            break
+        case .locationSelected:
+            if let selectedLocationCoordinate = viewModel.selectedLocationCoordinate{
+                context.coordinator.addAndSelectAnnotation(coordinate: selectedLocationCoordinate)
+                context.coordinator.configurePlyline(distenationCoordinates: selectedLocationCoordinate)
+            }
+        }
     }
     
     func makeCoordinator() -> MapCoordinator {//swiftui is calling that funstion..methay2ly feha feha ben3mel implemnts lel delegates ely ben7taga lel swiftui
@@ -38,6 +47,7 @@ extension UberMabViewRepresntable{
     class MapCoordinator:NSObject,MKMapViewDelegate{//el fekra hena en UberMabViewRepresntable haykon leh access lel MKMapViewDelegate
         let parent:UberMabViewRepresntable//to communicate with the UberMabViewRepresntable from here
         var userLocationCoordinate:CLLocationCoordinate2D?
+        var currentRegion:MKCoordinateRegion?//hasta7'demo 3ashan 2a3mel center lel mapview 3ala elmakan ely kont feh
         
         init(parent:UberMabViewRepresntable) {
             self.parent = parent
@@ -58,6 +68,7 @@ extension UberMabViewRepresntable{
             let region = MKCoordinateRegion(
                 center: CLLocationCoordinate2D(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude),
                 span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
+            currentRegion = region//to set the region
             parent.mapView.setRegion(region, animated: true)//men el parent ely shayel mapview ha3melo setRegion
         }
         
@@ -92,5 +103,15 @@ extension UberMabViewRepresntable{
             }
         }
         
+        func clearAndCenterMapview(){
+            parent.mapView.removeOverlays(parent.mapView.overlays)
+            parent.mapView.removeAnnotations(parent.mapView.annotations)
+            if let currentRegion = currentRegion{
+                parent.mapView.setRegion(currentRegion, animated: true)
+            }
+        }
+        
     }
+   
 }
+

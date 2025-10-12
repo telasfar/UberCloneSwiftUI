@@ -12,7 +12,8 @@ struct LocationSearchView: View {
     @State private var startLocation: String = ""
     //@StateObject var viewModel = LoactionSearchVM()
     @EnvironmentObject var viewModel: LoactionSearchVM//ba2na bengebo men el enviroment..HWA HENA BEY TALK AND TO WRITE 3ALA EL VM GOA EL TAPGESTURE
-    @Binding var showLocationSaerchview: Bool
+    //@Binding var showLocationSaerchview: Bool
+    @Binding var mapState: MapViewState//hayesta7'dem dah badalshowLocationSaerchview
     var body: some View {
         VStack{
             //Header View
@@ -62,7 +63,8 @@ struct LocationSearchView: View {
                         LocationSearchCell(title: result.title, subTitle: result.subtitle)
                             .onTapGesture {
                                 viewModel.selectLocation(location: result)
-                                showLocationSaerchview.toggle()
+                                //showLocationSaerchview.toggle()
+                                mapState = .locationSelected
 
                             }
                     }
@@ -75,5 +77,5 @@ struct LocationSearchView: View {
 }
 
 #Preview {
-    LocationSearchView( showLocationSaerchview: .constant(true))
+    LocationSearchView( mapState: .constant(.searchingLocation))
 }
