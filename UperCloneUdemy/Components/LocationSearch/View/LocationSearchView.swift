@@ -18,19 +18,9 @@ struct LocationSearchView: View {
         VStack{
             //Header View
             HStack{
-                VStack{
-                    Circle()
-                        .fill(Color(.systemGray3))
-                        .frame(width: 6, height: 6)
-                    
-                    Rectangle()
-                        .fill(Color(.systemGray3))
-                        .frame(width: 1, height: 24)
-                    
-                    Circle()
-                        .fill(Color(.systemGray3))
-                        .frame(width: 6, height: 6)
-                }
+                
+                DashedView()
+                
                 VStack(alignment: .leading){
                     TextField("Current Location",text:$startLocation)
                         .font(.caption)
@@ -62,9 +52,11 @@ struct LocationSearchView: View {
                     ForEach(viewModel.locations,id:\.self){result in
                         LocationSearchCell(title: result.title, subTitle: result.subtitle)
                             .onTapGesture {
-                                viewModel.selectLocation(location: result)
-                                //showLocationSaerchview.toggle()
-                                mapState = .locationSelected
+                                withAnimation{//will affect the transitions on HomeView
+                                    viewModel.selectLocation(location: result)
+                                    //showLocationSaerchview.toggle()
+                                    mapState = .locationSelected
+                                }
 
                             }
                     }

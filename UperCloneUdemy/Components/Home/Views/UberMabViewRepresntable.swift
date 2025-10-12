@@ -60,7 +60,7 @@ extension UberMabViewRepresntable{
             annotation.coordinate = coordinate
             parent.mapView.addAnnotation(annotation)
             parent.mapView.selectAnnotation(annotation, animated: true)
-            parent.mapView.showAnnotations(parent.mapView.annotations, animated: true)
+            //parent.mapView.showAnnotations(parent.mapView.annotations, animated: true)
         }
         
         func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
@@ -100,6 +100,9 @@ extension UberMabViewRepresntable{
             guard let userLocationCoordinate = userLocationCoordinate else{return}
             getDestinationRoute(from: userLocationCoordinate, to: distenationCoordinates) { route in
                 self.parent.mapView.addOverlay(route.polyline)
+                let rect = self.parent.mapView.mapRectThatFits(route.polyline.boundingMapRect,
+                                                               edgePadding: UIEdgeInsets(top: 64, left: 32, bottom: 500, right: 32))//3amel deh 3ashan el poly line ye fit el area ely fo2 el RideRequestView we el user ye2dar yeshof el polyline kamel
+                self.parent.mapView.setRegion(MKCoordinateRegion(rect), animated: true)
             }
         }
         

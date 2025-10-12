@@ -10,6 +10,7 @@ import SwiftUI
 struct MapActionButtom: View {
    // @Binding var showLocationSearchView: Bool//to be binded with the state on homeview
     @Binding var mapState: MapViewState
+    @EnvironmentObject var viewModel: LoactionSearchVM
     var body: some View {
         Button {
             withAnimation(.bouncy) {
@@ -37,6 +38,8 @@ struct MapActionButtom: View {
             mapState = .noInput//la2en el button dah bey3'ayr el state fala lwa kont fe el search haywadeno lel noInput state
         case .locationSelected:
             mapState = .noInput//2e3taber hena en eluser ba3d ma7'tar location rege3 fe kalmo we 3aml back  ?
+            
+            viewModel.selectedLocationCoordinate = nil//haye3melo be nil 3ashan kan beyfdal mo7atfez bel coodinate el 2adema lma ne7'tar wa7da gededa
         }
     }
 }
