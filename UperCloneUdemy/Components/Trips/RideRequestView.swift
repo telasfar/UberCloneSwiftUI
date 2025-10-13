@@ -58,6 +58,15 @@ struct RideRequestView: View {
                 HStack(spacing: 12){
                     ForEach(RideType.allCases,id: \.self){type in
                         SuggestedRideView(imgName: type.imageName, title: type.description)
+                            .background(Color(selectedRideType == type ? .systemBlue:.systemGroupedBackground))
+                            .cornerRadius(8)
+                            .scaleEffect(selectedRideType == type ? 1.2:1)
+                            .onTapGesture {
+                                withAnimation{
+                                    selectedRideType = type
+
+                                }
+                            }
                     }
                 }
             }

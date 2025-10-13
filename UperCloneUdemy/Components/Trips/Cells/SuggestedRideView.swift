@@ -25,8 +25,6 @@ struct SuggestedRideView: View {
             }
         }
         .frame(width: 114,height: 140)
-        .background(Color(.systemGroupedBackground))
-        .cornerRadius(8)
     }
 }
 
