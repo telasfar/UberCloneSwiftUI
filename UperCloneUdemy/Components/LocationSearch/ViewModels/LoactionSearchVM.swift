@@ -12,7 +12,7 @@ class LoactionSearchVM:NSObject,ObservableObject,Observable{
     
     @Published var locations = [MKLocalSearchCompletion]()
     @Published var selectedLocationCoordinate:CLLocationCoordinate2D?//hayet3amlo set men el tapGesture beta3
-    
+    var userLocation:CLLocationCoordinate2D?
     private let searchCompleter = MKLocalSearchCompleter()
     var queryString = ""{
         didSet{
@@ -42,6 +42,16 @@ class LoactionSearchVM:NSObject,ObservableObject,Observable{
         searchRequest.naturalLanguageQuery = localSearch.title.appending(localSearch.subtitle)
         let search = MKLocalSearch(request: searchRequest)
         search.start(completionHandler: complition)
+        
+    }
+    
+    //TODO: move this function to a new viewMOdel for RideRequestView
+    func computRidePrice(type:RideType) -> Double{
+        guard let selectedLocationCoordinate = selectedLocationCoordinate , let userLocation = userLocation else { return 0 }
+        let userCLLocation = CLLocation(latitude: userLocation.latitude, longitude: userLocation.longitude)
+        let destantionCLLocation = CLLocation(latitude: selectedLocationCoordinate.latitude, longitude: selectedLocationCoordinate.longitude)
+        let tripDistanceInKiloMeter = userCLLocation.distance(from: destantionCLLocation) / 1000
+        return type.computDistanceFare(distance: tripDistanceInKiloMeter)
         
     }
 }

@@ -11,6 +11,7 @@ struct HomeView: View {
     
     //@State private var showLoctionView: Bool = true//han7ot badalaha el map state enum
     @State private var mapViewState:MapViewState = .noInput
+    @EnvironmentObject var viewModel: LoactionSearchVM//hayklim beh el RideRequestView 3ashan yepaselo el location ely gaylo men el onRecieve beta3 el publisher
     
     var body: some View {
         ZStack (alignment: .bottom){
@@ -43,6 +44,12 @@ struct HomeView: View {
             if mapViewState == .locationSelected {
                 RideRequestView()
                     .transition(.move(edge: .bottom))//el animation coming from LocalSearchView
+            }
+        }
+        .onReceive(LocationManager.shared.$userLocation) { location in
+            if let location = location{
+                print(location)
+                viewModel.userLocation = location//pass location to VM
             }
         }
 

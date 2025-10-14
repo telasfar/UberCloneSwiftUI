@@ -10,7 +10,7 @@ import MapKit
 
 struct UberMabViewRepresntable:UIViewRepresentable{//dah protocol lel uikit integration fe el swiftui
     let mapView = MKMapView()
-    let locationManager = LocationManager()//hanupdate meno el location
+    //let locationManager = LocationManager.shared//hanupdate meno el location
     @EnvironmentObject var viewModel: LoactionSearchVM//nafs instance el viewModel ely ma3molha inject fe el APP we shayla nafs el data men LocationSearchView..HWA HENA BEYLISTEN LEL VM CHANGES
     
     @Binding var mapState: MapViewState

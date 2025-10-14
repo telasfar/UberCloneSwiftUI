@@ -9,7 +9,8 @@ import SwiftUI
 
 struct RideRequestView: View {
     @State private var selectedRideType: RideType = .uberX//7ata fe state 3ashan el user hayswitch benhom we haye7tagaha fe el animation
-    
+    @EnvironmentObject var viewModel: LoactionSearchVM
+
     var body: some View {
         VStack{
             Capsule()
@@ -57,7 +58,7 @@ struct RideRequestView: View {
             ScrollView(.horizontal){
                 HStack(spacing: 12){
                     ForEach(RideType.allCases,id: \.self){type in
-                        SuggestedRideView(imgName: type.imageName, title: type.description)
+                        SuggestedRideView(imgName: type.imageName, title: type.description,price: (viewModel.computRidePrice(type:type)).toCurrency)
                             .background(Color(selectedRideType == type ? .systemBlue:.systemGroupedBackground))
                             .cornerRadius(8)
                             .scaleEffect(selectedRideType == type ? 1.2:1)
