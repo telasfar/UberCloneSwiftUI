@@ -11,7 +11,12 @@ import MapKit
 class LoactionSearchVM:NSObject,ObservableObject,Observable{
     
     @Published var locations = [MKLocalSearchCompletion]()
-    @Published var selectedLocationCoordinate:CLLocationCoordinate2D?//hayet3amlo set men el tapGesture beta3
+   // @Published var selectedLocationCoordinate:CLLocationCoordinate2D?//hayet3amlo set men el tapGesture beta3
+    
+    @Published var selectedUberLocation:UberLocation?//will use this instade of selectedLocationCoordinate
+    @Published var pickUpTime:String?//will calculate this times from the route in getDestinationRoute
+    @Published var dropOffTime:String?
+    
     var userLocation:CLLocationCoordinate2D?
     private let searchCompleter = MKLocalSearchCompleter()
     var queryString = ""{
@@ -31,7 +36,8 @@ class LoactionSearchVM:NSObject,ObservableObject,Observable{
         localSearchCoordinate(for: location) { [weak self] response, err in
             guard let searchItem = response?.mapItems.first else { return }
             let coordinate = searchItem.placemark.coordinate
-            self?.selectedLocationCoordinate = coordinate
+            //self?.selectedLocationCoordinate = coordinate
+            self?.selectedUberLocation = UberLocation(title: location.title, coordinate: coordinate)
         }
     }
     
@@ -47,12 +53,37 @@ class LoactionSearchVM:NSObject,ObservableObject,Observable{
     
     //TODO: move this function to a new viewMOdel for RideRequestView
     func computRidePrice(type:RideType) -> Double{
-        guard let selectedLocationCoordinate = selectedLocationCoordinate , let userLocation = userLocation else { return 0 }
+        guard let selectedLocationCoordinate = selectedUberLocation?.coordinate , let userLocation = userLocation else { return 0 }
         let userCLLocation = CLLocation(latitude: userLocation.latitude, longitude: userLocation.longitude)
         let destantionCLLocation = CLLocation(latitude: selectedLocationCoordinate.latitude, longitude: selectedLocationCoordinate.longitude)
         let tripDistanceInKiloMeter = userCLLocation.distance(from: destantionCLLocation) / 1000
         return type.computDistanceFare(distance: tripDistanceInKiloMeter)
         
+    }
+    
+    func getDestinationRoute(
+        from userLocation:CLLocationCoordinate2D,
+        to destinationLocation:CLLocationCoordinate2D,
+        complition: @escaping (MKRoute) -> Void){
+            let userPlaceMark = MKPlacemark(coordinate: userLocation)
+            let destinationPlaceMark = MKPlacemark(coordinate: destinationLocation)
+            let request = MKDirections.Request()
+            request.source = MKMapItem(placemark: userPlaceMark)
+            request.destination = MKMapItem(placemark: destinationPlaceMark)
+            request.transportType = .automobile
+            let directions = MKDirections(request: request)
+            directions.calculate() { (response, error) in
+                guard let route = response?.routes.first else { return }
+                self.configureTimeForPickeupandDropOff(expectedTime: route.expectedTravelTime)//gab men el route el expectedTime
+                complition(route)
+            }
+     }
+    
+    func configureTimeForPickeupandDropOff(expectedTime:Double){
+        let formatter = DateFormatter()
+        formatter.dateFormat = "hh:mm a"
+        pickUpTime = formatter.string(from: Date())
+        dropOffTime = formatter.string(from: Date() + expectedTime)
     }
 }
 

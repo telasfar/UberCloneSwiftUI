@@ -8,6 +8,6 @@
 import CoreLocation
 
 struct UberLocation{
-    let title: String
+    let title: String//hay3oz el title dah fe el RideREquestView
     let coordinate: CLLocationCoordinate2D
 }

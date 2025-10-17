@@ -36,10 +36,10 @@ struct MapActionButtom: View {
             break
         case .searchingLocation:
             mapState = .noInput//la2en el button dah bey3'ayr el state fala lwa kont fe el search haywadeno lel noInput state
-        case .locationSelected:
+        case .locationSelected, .polylineAdded:
             mapState = .noInput//2e3taber hena en eluser ba3d ma7'tar location rege3 fe kalmo we 3aml back  ?
             
-            viewModel.selectedLocationCoordinate = nil//haye3melo be nil 3ashan kan beyfdal mo7atfez bel coodinate el 2adema lma ne7'tar wa7da gededa
+            viewModel.selectedUberLocation = nil//haye3melo be nil 3ashan kan beyfdal mo7atfez bel coodinate el 2adema lma ne7'tar wa7da gededa
         }
     }
 }

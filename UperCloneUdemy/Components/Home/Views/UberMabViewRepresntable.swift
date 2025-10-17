@@ -30,11 +30,13 @@ struct UberMabViewRepresntable:UIViewRepresentable{//dah protocol lel uikit inte
             context.coordinator.clearAndCenterMapview()
         case .searchingLocation:
             break
-        case .locationSelected:
-            if let selectedLocationCoordinate = viewModel.selectedLocationCoordinate{
+        case .locationSelected://kan dayman deh betfedal yetnada 3aliha fa 7at el polylineAdded 3ashan yetla3 men el cycle deh
+            if let selectedLocationCoordinate = viewModel.selectedUberLocation?.coordinate{
                 context.coordinator.addAndSelectAnnotation(coordinate: selectedLocationCoordinate)
                 context.coordinator.configurePlyline(distenationCoordinates: selectedLocationCoordinate)
             }
+        case.polylineAdded:
+            break
         }
     }
     
@@ -79,29 +81,30 @@ extension UberMabViewRepresntable{
             return polyline
         }
         
-        func getDestinationRoute(
-            from userLocation:CLLocationCoordinate2D,
-            to destinationLocation:CLLocationCoordinate2D,
-            complition: @escaping (MKRoute) -> Void){
-                let userPlaceMark = MKPlacemark(coordinate: userLocation)
-                let destinationPlaceMark = MKPlacemark(coordinate: destinationLocation)
-                let request = MKDirections.Request()
-                request.source = MKMapItem(placemark: userPlaceMark)
-                request.destination = MKMapItem(placemark: destinationPlaceMark)
-                request.transportType = .automobile
-                let directions = MKDirections(request: request)
-                directions.calculate() { (response, error) in
-                    guard let route = response?.routes.first else { return }
-                    complition(route)
-                }
-         }
+//        func getDestinationRoute(
+//            from userLocation:CLLocationCoordinate2D,
+//            to destinationLocation:CLLocationCoordinate2D,
+//            complition: @escaping (MKRoute) -> Void){
+//                let userPlaceMark = MKPlacemark(coordinate: userLocation)
+//                let destinationPlaceMark = MKPlacemark(coordinate: destinationLocation)
+//                let request = MKDirections.Request()
+//                request.source = MKMapItem(placemark: userPlaceMark)
+//                request.destination = MKMapItem(placemark: destinationPlaceMark)
+//                request.transportType = .automobile
+//                let directions = MKDirections(request: request)
+//                directions.calculate() { (response, error) in
+//                    guard let route = response?.routes.first else { return }
+//                    complition(route)
+//                }
+//         }//hayen2elha lel LocationVM
         
         func configurePlyline(distenationCoordinates:CLLocationCoordinate2D){
             guard let userLocationCoordinate = userLocationCoordinate else{return}
-            getDestinationRoute(from: userLocationCoordinate, to: distenationCoordinates) { route in
+            parent.viewModel.getDestinationRoute(from: userLocationCoordinate, to: distenationCoordinates) { route in
                 self.parent.mapView.addOverlay(route.polyline)
                 let rect = self.parent.mapView.mapRectThatFits(route.polyline.boundingMapRect,
                                                                edgePadding: UIEdgeInsets(top: 64, left: 32, bottom: 500, right: 32))//3amel deh 3ashan el poly line ye fit el area ely fo2 el RideRequestView we el user ye2dar yeshof el polyline kamel
+                self.parent.mapState = .polylineAdded//to git rid of keep inserting the polyline 
                 self.parent.mapView.setRegion(MKCoordinateRegion(rect), animated: true)
             }
         }

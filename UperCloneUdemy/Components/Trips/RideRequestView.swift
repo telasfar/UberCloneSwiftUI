@@ -26,16 +26,18 @@ struct RideRequestView: View {
                         Text("Current Location")
                             .font(.caption)
                         Spacer()
-                        Text("1.44 pm")
+                        Text(viewModel.pickUpTime ?? "")
                     }
                     .foregroundColor(.gray)
                     
                     
                     HStack{
-                        Text("Current Location")
-                            .font(.caption)
+                        if let location = viewModel.selectedUberLocation{
+                            Text(location.title)
+                                .font(.caption)
+                        }
                         Spacer()
-                        Text("1.44 pm")
+                        Text(viewModel.dropOffTime ?? "")
                     }
                     .foregroundColor(.black)
                     
@@ -88,7 +90,7 @@ struct RideRequestView: View {
             }
             
         }
-        .background(.white)
+        .background(Color.theme.backGroundColor)
     }
 }
 

@@ -41,7 +41,7 @@ struct HomeView: View {
                 
             }
             
-            if mapViewState == .locationSelected {
+            if mapViewState == .locationSelected || mapViewState == .polylineAdded{
                 RideRequestView()
                     .transition(.move(edge: .bottom))//el animation coming from LocalSearchView
             }
