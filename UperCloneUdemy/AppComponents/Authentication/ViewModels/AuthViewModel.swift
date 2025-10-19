@@ -15,6 +15,7 @@ import FirebaseFirestore
 
 class AuthViewModel:ObservableObject{//haye3melo inject fe el APP environment
     @Published var userSession: FirebaseAuth.User?
+    @Published var currentUser:User?//hayeb3ato lel SideMnuView
     
     init(){
         userSession = Auth.auth().currentUser//law feh logged user el Auth.auth().currentUser mosh hatkon be null
@@ -59,12 +60,13 @@ class AuthViewModel:ObservableObject{//haye3melo inject fe el APP environment
     
     func fetchUser(){
         guard let userID = Auth.auth().currentUser?.uid else {return}//you can get it from the userSeccion as well
-        Firestore.firestore().collection("users").document(userID).getDocument { snapshot, err in
+        Firestore.firestore().collection("users").document(userID).getDocument {  snapshot, err in
             if let err = err{
                 print(err)
                 return
             }
             guard let user = try? snapshot?.data(as: User.self) else {return}
+            self.currentUser = user
         }
     }
 }

@@ -50,7 +50,7 @@ struct LoginView: View {
                         print("ok")
                     }
                     
-                    NavigationLink {
+                    NavigationLink {//el NavigationLink 3'er el fe el SideMenuView
                         RegistrationView()
                             .navigationBarBackButtonHidden(true)//3ashan hwa 3amel back button 
                     } label: {

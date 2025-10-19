@@ -10,6 +10,7 @@ import SwiftUI
 struct MapActionButtom: View {
    // @Binding var showLocationSearchView: Bool//to be binded with the state on homeview
     @Binding var mapState: MapViewState
+    @Binding var showSideMenu:Bool
     @EnvironmentObject var viewModel: LoactionSearchVM
     var body: some View {
         Button {
@@ -33,7 +34,7 @@ struct MapActionButtom: View {
     func actionForState(_ state:MapViewState){
         switch state {
         case .noInput:
-            break
+            showSideMenu.toggle()
         case .searchingLocation:
             mapState = .noInput//la2en el button dah bey3'ayr el state fala lwa kont fe el search haywadeno lel noInput state
         case .locationSelected, .polylineAdded:
@@ -45,5 +46,6 @@ struct MapActionButtom: View {
 }
 
 #Preview {
-    MapActionButtom(mapState: .constant(.searchingLocation))
+    MapActionButtom(mapState: .constant(.searchingLocation), showSideMenu: .constant(true))
+        .environmentObject(LoactionSearchVM())
 }
