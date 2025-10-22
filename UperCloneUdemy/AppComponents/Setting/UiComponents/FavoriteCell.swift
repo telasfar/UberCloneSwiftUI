@@ -11,13 +11,13 @@ struct FavoriteCell: View {
     
     let name:String
     let email:String
+    let imgName:String
     
     var body: some View {
         HStack(spacing:12){
-            Image(systemName: "person.crop.circle")
+            Image(systemName: imgName)
                 .resizable()
                 .scaledToFill()
-                .clipShape(Circle())
                 .frame(width: 64,height: 64)
             
             VStack(alignment: .leading, spacing:12){
@@ -29,10 +29,18 @@ struct FavoriteCell: View {
                     .foregroundColor(.gray)
                     .opacity(0.7)
             }
+            
+            Spacer()
+            
+            Image(systemName: "arrow.right")
+                .resizable()
+                .frame(width: 50,height: 50)
+                .font(.caption)
         }
+        
     }
 }
 
 #Preview {
-    FavoriteCell(name: "", email: "")
+    FavoriteCell(name: "ahmed", email: "test@test.com", imgName: "play.house.fill")
 }

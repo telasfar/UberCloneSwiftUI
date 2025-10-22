@@ -20,7 +20,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct UperCloneUdemyApp: App {
     @StateObject var loctionViewModel = LoactionSearchVM()//3amlo inject fe el environemnt 3ahsn haye7tag nafs el instance beta3to fe LocationSearchView we fe UberMabViewRepresntable 3ashan yesta7'dem el selectedLocation fa haykon feh instance wa7da shayla el etenen le kol el app
-    @UIApplicationDelegateAdaptor var appDelegate: AppDelegate//keda 2e7na 3amlna inject lel Firebase fe el app delegate
+  //  @UIApplicationDelegateAdaptor var appDelegate: AppDelegate//keda 2e7na 3amlna inject lel Firebase fe el app delegate
     @StateObject var authViewModel = AuthViewModel()
     
     var body: some Scene {
