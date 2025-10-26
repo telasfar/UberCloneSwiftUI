@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct SideMenuView: View {
     
@@ -54,7 +55,7 @@ struct SideMenuView: View {
 
 #Preview {
     NavigationStack{//3ashan tesha3'al el navigation destination
-        SideMenuView(user: User(fullName: "ahmed", email: "test@examble.com", uid: "34527789"))
+        SideMenuView(user: User(fullName: "tariq", email: "test@test.com", uid: "23432523",accountType: .driver, coordinates: GeoPoint(latitude: 30.21, longitude: 30.231)))
     }
 }
 

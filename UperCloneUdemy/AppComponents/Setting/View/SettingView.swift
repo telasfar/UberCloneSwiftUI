@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct SettingView: View {
     let user:User
@@ -57,6 +58,6 @@ struct SettingView: View {
 
 #Preview {
     NavigationStack{
-        SettingView(user: User(fullName: "tariq", email: "test@test.com", uid: "23432523"))
+        SettingView(user: User(fullName: "tariq", email: "test@test.com", uid: "23432523",accountType: .driver, coordinates: GeoPoint(latitude: 30.21, longitude: 30.231)))
     }//7at el nvigation stack dah 3ashan el navigationTitle yezhar fe el preview
 }

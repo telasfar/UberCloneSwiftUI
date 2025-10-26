@@ -14,6 +14,9 @@ struct HomeView: View {
     @EnvironmentObject var viewModel: LoactionSearchVM//hayklim beh el RideRequestView 3ashan yepaselo el location ely gaylo men el onRecieve beta3 el publisher
     @EnvironmentObject var authviewModel: AuthViewModel//meno hane3raf ne3red el home wala el login law el user mosh logged
     @State var showSideMenu = false //hane3mlo binding fe el MapActionButton
+    @StateObject var homeVM = HomeViewModel()
+    @EnvironmentObject var homeViewModel: HomeViewModel
+    
     var body: some View {
        Group{
             if authviewModel.userSession == nil{
@@ -58,7 +61,8 @@ struct HomeView: View {
                             
                         }
                 }else if mapViewState == .searchingLocation{
-                    LocationSearchView(mapState: $mapViewState)
+                   // LocationSearchView(mapState: $mapViewState)
+                    LocationSearchView()
                     
                 }
                 
@@ -77,6 +81,12 @@ struct HomeView: View {
                 print(location)
                 viewModel.userLocation = location//pass location to VM
             }
+        }
+        .onReceive(viewModel.$selectedUberLocation) { location in
+            if location != nil {
+                self.mapViewState = .locationSelected
+            }//heylisten 3ala el publisher beta3 $selectedUberLocation we law galo meno value hayset el mapstate 3ashan..we hwa 3amel keda 3ashan hwa shal el mapSatet we dah ely kan bey2om belmohema deh fa esta7'dem el onRecieve deh badalha
+            
         }
     }
 }

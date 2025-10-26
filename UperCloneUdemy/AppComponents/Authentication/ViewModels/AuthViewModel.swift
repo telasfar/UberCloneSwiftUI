@@ -23,6 +23,7 @@ class AuthViewModel:ObservableObject{//haye3melo inject fe el APP environment
     }
     
     func registerUser(email:String, password:String, fullname:String){
+        guard let location = LocationManager.shared.userLocation else {return}
         Auth.auth().createUser(withEmail: email, password: password){result,err in
             if let err = err {
                 print(err)
@@ -31,11 +32,12 @@ class AuthViewModel:ObservableObject{//haye3melo inject fe el APP environment
             print(result?.user.uid ?? "")//lma el uid haykon mawgood fe el firbase el homeView hya ely hatezhar lel user la2eno mosh haykon be nil
             guard let userResult = result?.user else {return}
             self.userSession = userResult//published to show the home view
-            let user = User(fullName: fullname, email: email, uid: userResult.uid)
+            let user = User(fullName: fullname, email: email, uid: userResult.uid,accountType: .driver,coordinates: GeoPoint(latitude: location.latitude, longitude: location.longitude))
             let encodedUser = try? Firestore.Encoder().encode(user)
             if let encodedUser = encodedUser{
                 Firestore.firestore().collection("users").document(userResult.uid).setData(encodedUser)//sava the user data in FireStore
             }
+            self.fetchUser()//to fix the bug when you relogin with another user to get the lat one
         }
     }
     
@@ -46,6 +48,7 @@ class AuthViewModel:ObservableObject{//haye3melo inject fe el APP environment
                 return
             }
             self.userSession = result?.user
+            self.fetchUser()
         }
     }
     

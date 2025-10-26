@@ -7,6 +7,13 @@
 
 import Foundation
 import MapKit
+import Firebase
+import FirebaseAuth
+
+enum LocationSearchConfig{
+    case bookRide
+    case saveLocation(SavedLocationModel)//7at el enum as associated value hena
+}
 
 class LoactionSearchVM:NSObject,ObservableObject,Observable{
     
@@ -32,13 +39,34 @@ class LoactionSearchVM:NSObject,ObservableObject,Observable{
         
     }
     
-    func selectLocation(location:MKLocalSearchCompletion){
+    func selectLocation(location:MKLocalSearchCompletion, config:LocationSearchConfig){
         localSearchCoordinate(for: location) { [weak self] response, err in
             guard let searchItem = response?.mapItems.first else { return }
             let coordinate = searchItem.placemark.coordinate
-            //self?.selectedLocationCoordinate = coordinate
-            self?.selectedUberLocation = UberLocation(title: location.title, coordinate: coordinate)
+            switch config{
+            case .bookRide:
+                self?.selectedUberLocation = UberLocation(title: location.title, coordinate: coordinate)
+            case .saveLocation(let savedLocationConfig)://haygeb el asociated value men hena
+                print("save location to core data")
+                guard let userID = Auth.auth().currentUser?.uid else { return }
+                let savedLocation = locationModel(title: location.title, address: location.subtitle, coordinate: GeoPoint(latitude: coordinate.latitude, longitude: coordinate.longitude))
+                if let encodedLocation = try? Firestore.Encoder().encode(savedLocation){//3amal encode lel location el 2awel
+                    Firestore.firestore().collection("user").document(userID).updateData([savedLocationConfig.databaseIdentifier:encodedLocation])
+                }
+                
+            }
         }
+//        switch config{
+//        case .bookRide:
+//            localSearchCoordinate(for: location) { [weak self] response, err in
+//                guard let searchItem = response?.mapItems.first else { return }
+//                let coordinate = searchItem.placemark.coordinate
+//                //self?.selectedLocationCoordinate = coordinate
+//                self?.selectedUberLocation = UberLocation(title: location.title, coordinate: coordinate)
+//            }
+//        case .saveLocation:
+//            print("save location to core data")
+//        }//shof hwa 3amal refactor hena ezay eno 7at el switch gowa el clousre mosh el 3aks
     }
     
   

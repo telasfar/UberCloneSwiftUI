@@ -12,7 +12,7 @@ struct UberMabViewRepresntable:UIViewRepresentable{//dah protocol lel uikit inte
     let mapView = MKMapView()
     //let locationManager = LocationManager.shared//hanupdate meno el location
     @EnvironmentObject var viewModel: LoactionSearchVM//nafs instance el viewModel ely ma3molha inject fe el APP we shayla nafs el data men LocationSearchView..HWA HENA BEYLISTEN LEL VM CHANGES
-    
+    @EnvironmentObject var homeViewModel: HomeViewModel
     @Binding var mapState: MapViewState
     
     func makeUIView(context: Context) -> MKMapView {
@@ -28,6 +28,7 @@ struct UberMabViewRepresntable:UIViewRepresentable{//dah protocol lel uikit inte
         switch mapState{
         case .noInput:
             context.coordinator.clearAndCenterMapview()
+            context.coordinator.addDriversToMap(homeViewModel.drivers)
         case .searchingLocation:
             break
         case .locationSelected://kan dayman deh betfedal yetnada 3aliha fa 7at el polylineAdded 3ashan yetla3 men el cycle deh
@@ -81,6 +82,15 @@ extension UberMabViewRepresntable{
             return polyline
         }
         
+        func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView? {
+            if let anotation = annotation as? DriverAnnotation {//law driver
+                let view = MKAnnotationView(annotation: anotation, reuseIdentifier: "driver")
+                view.image = UIImage(systemName: "car")
+                return view
+            }
+            return nil
+        }
+        
 //        func getDestinationRoute(
 //            from userLocation:CLLocationCoordinate2D,
 //            to destinationLocation:CLLocationCoordinate2D,
@@ -115,6 +125,16 @@ extension UberMabViewRepresntable{
             if let currentRegion = currentRegion{
                 parent.mapView.setRegion(currentRegion, animated: true)
             }
+        }
+        
+        func addDriversToMap(_ drivers:[User]){
+//            for driver in drivers{
+//                let annotation = DriverAnnotation(driver: driver)
+//                parent.mapView.addAnnotation(annotation)
+//            }//momken te3melha bel map
+            
+           let annotations = drivers.map{ DriverAnnotation(driver: $0)}
+            parent.mapView.addAnnotations(annotations)
         }
         
     }

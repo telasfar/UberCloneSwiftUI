@@ -8,17 +8,23 @@
 import SwiftUI
 
 struct SavedLocationSearchView: View {
+    @State var searchText: String = ""
+   var viewModel = LoactionSearchVM()//lma shelt @stateObject el donia matla7'abtetsh
+    let savedLocationConfig:SavedLocationModel
     var body: some View {
         VStack {
-            Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+            SearchView(viewModel: viewModel)
+            Spacer()
+            SearchResultView(viewModel:viewModel, config: .saveLocation(savedLocationConfig))
+            
         }
-        .navigationTitle("Add Home")
+        .navigationTitle(savedLocationConfig.title)
     }
 }
 
 #Preview {
     NavigationStack{
-        SavedLocationSearchView()
+        SavedLocationSearchView(savedLocationConfig: .home)
     }//3ashan yeshof el navigationTitle
          
 }

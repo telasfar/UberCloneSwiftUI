@@ -31,4 +31,27 @@ enum SavedLocationModel :Int, CaseIterable, Identifiable {
             return "network"
         }
     }
+    
+    var databaseIdentifier: String {
+        switch self {
+        case .home:
+            return "homeLocation"
+        case .work:
+            return "workLocation"
+        }
+    }
+    
+    func getSubTitle(use:User)->String{
+        switch self{
+            case .home:
+            if let homeLocation = use.homeLocation{
+                return homeLocation.title
+            }
+        case .work:
+            if let workLocation = use.workLocation{
+                return workLocation.title
+            }
+        }
+        return ""
+    }
 }
