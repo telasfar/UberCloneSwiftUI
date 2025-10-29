@@ -15,7 +15,7 @@ struct RideRequestView: View {
         VStack{
             Capsule()
                 .fill(Color(.systemGray5))
-                .frame(width: 48, height: 8)
+                .frame(width: 48, height: 8)//7at el capsule deh ely haye3mel menha drag law 7ab ye2fel el view
             
             HStack{
                 DashedView()
