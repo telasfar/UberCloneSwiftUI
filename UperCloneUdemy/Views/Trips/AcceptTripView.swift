@@ -9,6 +9,8 @@ import SwiftUI
 
 struct AcceptTripView: View {
     let btnWidth = (UIScreen.main.bounds.width * 0.5) - 48
+    @StateObject var viewModel = HomeLocationVM()
+    
     var body: some View {
         VStack{
             Capsule()
@@ -35,7 +37,7 @@ struct AcceptTripView: View {
                 
                 
                 Button{
-                    
+                    viewModel.requestTrip()
                 }label:{
                    Text("ACCEPT")
                 }

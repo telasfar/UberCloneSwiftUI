@@ -22,4 +22,4 @@ struct TripModel:Identifiable, Codable{
     let dropOffLocationName:String
     let pickupLocationAddress:String
     let tripCost:Double
-}
+}//7'od balak en el data ely hate7tagaha 3ashan te fill el struct dah hata7'od sheaya men el AuthVM we showaya men el locationVM

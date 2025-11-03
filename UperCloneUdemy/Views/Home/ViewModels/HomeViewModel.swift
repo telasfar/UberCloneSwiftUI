@@ -14,6 +14,7 @@ class HomeViewModel:ObservableObject{
     
     @Published var drivers = [User]()
     private var cancalable = Set<AnyCancellable>()
+    var currentUser:User?
     
     init(){
         fetchUser()
@@ -42,6 +43,7 @@ class HomeViewModel:ObservableObject{
             .compactMap(\.self)
             .sink { user in
                 if user.accountType == AccountType.passenger{
+                    self.currentUser = user
                     self.fetchAllDerivers()
                 }
             }
