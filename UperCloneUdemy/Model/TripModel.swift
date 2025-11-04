@@ -7,9 +7,10 @@
 
 import Foundation
 import Firebase
+import FirebaseFirestore
 
 struct TripModel:Identifiable, Codable{
-    let id:String
+    @DocumentID var id:String?//@DocumentID automatically assign el documentID el parent lel child beta3aha fayeb2o related le ba3d
     let passengerID:String
     let driverID:String
     let passengerName:String
@@ -22,4 +23,13 @@ struct TripModel:Identifiable, Codable{
     let dropOffLocationName:String
     let pickupLocationAddress:String
     let tripCost:Double
-}//7'od balak en el data ely hate7tagaha 3ashan te fill el struct dah hata7'od sheaya men el AuthVM we showaya men el locationVM
+    var distnceToPassenger:String?
+    var travelTime:Int?
+    var state:TripState
+}//7'od balak en el data ely hate7tagaha 3ashan te fill el struct dah hata7'od shewaya men el AuthVM we showaya men el locationVM
+
+enum TripState:Int,Codable{//hayet3amlo encode fe el DB we el Int 3ashan hayet7'azen keda fe el firestore (as Int)
+    case requested//to show loading indeicator
+    case accepted
+    case rejected
+}

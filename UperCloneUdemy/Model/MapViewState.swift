@@ -13,4 +13,6 @@ enum MapViewState {
     case searchingLocation
     case locationSelected
     case polylineAdded
+    case tripRequested//7at 7aga related lel trip fe el map state la2en el mapstate hatet3'ayr be el state beta3et el view we hat7'aly el view yet3'ayr hwa kman
+    case tripAccepted
 }

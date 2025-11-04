@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import Firebase
+import MapKit
 
 struct AcceptTripView: View {
     let btnWidth = (UIScreen.main.bounds.width * 0.5) - 48
-    @StateObject var viewModel = HomeLocationVM()
+    let trip:TripModel
     
     var body: some View {
         VStack{
@@ -17,15 +19,15 @@ struct AcceptTripView: View {
                 .fill(Color(.systemGray5))
                 .frame(width: 48, height: 8)
             
-            HeaderTripView()
+            HeaderTripView(tripTime:"\(trip.travelTime ?? 0)")
             
-            ProfileTripView()
+            ProfileTripView(name: trip.passengerName, cost: trip.tripCost)
             
-            MapTripView()
+            MapTripView(pickupLocation: trip.dropOffLocation,pickupName: trip.pickupLocationName, pickupAddress: trip.pickupLocationAddress, annotation: UberLocation(title: trip.dropOffLocationName, coordinate:trip.dropOffLocation.toCoordinate ), distanceOFtrip: trip.distnceToPassenger ?? "")
             
             HStack{
                 Button{
-                    
+                    TripService.shared.acceptTrip()
                 }label:{
                     Text("REJECT")
                 }
@@ -37,7 +39,7 @@ struct AcceptTripView: View {
                 
                 
                 Button{
-                    viewModel.requestTrip()
+                    TripService.shared.rejectTrip()
                 }label:{
                    Text("ACCEPT")
                 }
@@ -49,11 +51,15 @@ struct AcceptTripView: View {
             }
             .padding()
         }
+        .background(Color.theme.backGroundColor)
+        .cornerRadius(16)
+        .shadow(color:Color.gray,radius: 8)//3amal el shadow dah 3ashan yedy lel user impresiom enhom two seperate view above each other lma ye7sal el pop up fo2 el homeview
     }
 }
     
 
 
 #Preview {
-    AcceptTripView()
+    AcceptTripView( trip: TripModel.init(id: "", passengerID: "", driverID: "", passengerName: "", driverName: "", driverlocation: GeoPoint(latitude: 5, longitude: 4), passengerLocation: GeoPoint(latitude: 5, longitude: 4), pickUpLocation: GeoPoint(latitude: 5, longitude: 4), dropOffLocation: GeoPoint(latitude: 5, longitude: 4), pickupLocationName: "", dropOffLocationName: "", pickupLocationAddress: "", tripCost: 7, state: .accepted))
 }
+

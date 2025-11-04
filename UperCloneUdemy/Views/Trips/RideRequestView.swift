@@ -78,7 +78,9 @@ struct RideRequestView: View {
             PaymentFooter()
             
             Button{
-                
+                //to request trip
+                TripService.shared.requestTrip()
+
             }label:{
                 Text("CONFIRM RIDE")
                     .font(.headline)

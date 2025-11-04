@@ -16,7 +16,18 @@ extension Double{
         return formatter
     }
     
+    private var distanceFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 1
+        return formatter
+    }
     var toCurrency:String{
         return currencyFormatter.string(for:self) ?? ""
+    }
+    
+    var toDistance:String{
+        return distanceFormatter.string(for:self) ?? ""
     }
 }

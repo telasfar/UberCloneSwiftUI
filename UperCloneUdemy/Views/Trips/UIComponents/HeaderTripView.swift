@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HeaderTripView: View {
+    var tripTime:String = ""
     var body: some View {
         VStack{
             HStack{
@@ -19,7 +20,7 @@ struct HeaderTripView: View {
                 Spacer()
                 
                 VStack{
-                    Text("10")
+                    Text(tripTime)
                         .bold()
                     Text("Minutes")
                         .bold()//7elwa el bold deh

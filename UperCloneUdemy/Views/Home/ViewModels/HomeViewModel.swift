@@ -13,11 +13,18 @@ import Combine
 class HomeViewModel:ObservableObject{
     
     @Published var drivers = [User]()
-    private var cancalable = Set<AnyCancellable>()
-    var currentUser:User?
-    
+     var cancalable = Set<AnyCancellable>()
+    @Published var currentUser:User?
+    @Published var trip:TripModel?
+
     init(){
         fetchUser()
+        TripService.shared.$tripModel
+            .compactMap(\.self)
+            .sink { trip in
+                self.trip = trip
+            }
+            .store(in:&cancalable)
     }
     
     func fetchUser(){
@@ -44,10 +51,16 @@ class HomeViewModel:ObservableObject{
             .sink { user in
                 if user.accountType == AccountType.passenger{
                     self.currentUser = user
-                    self.fetchAllDerivers()
+                    if user.accountType == .passenger{
+                        self.fetchAllDerivers()
+                        TripService.shared.addTripObserver()//to listen if trip accepted or rejected
+                    }else{
+                        TripService.shared.fetchTrips()
+                    }
                 }
             }
             .store(in:&cancalable)
+        
     }
     
     func fetchAllDerivers(){
@@ -60,4 +73,14 @@ class HomeViewModel:ObservableObject{
                 self.drivers = driversArray
             }
     }
+    
+//    func fetchTrips(){
+//        guard let currentUser = currentUser ,currentUser.accountType == .driver else {return}
+//        Firestore.firestore().collection("trips")
+//            .whereField("driverId", isEqualTo: currentUser.uid)
+//            .getDocuments { snapshot, _ in
+//                guard let document = snapshot?.documents.first, let trip = try? document.data(as: TripModel.self) else {return}
+//                self.tripModel = trip//will be populated and show accept trip view
+//            }
+//    }
 }

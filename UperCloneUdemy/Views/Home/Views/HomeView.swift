@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct HomeView: View {
     
@@ -14,11 +15,13 @@ struct HomeView: View {
     @EnvironmentObject var viewModel: LoactionSearchVM//hayklim beh el RideRequestView 3ashan yepaselo el location ely gaylo men el onRecieve beta3 el publisher
     @EnvironmentObject var authviewModel: AuthViewModel//meno hane3raf ne3red el home wala el login law el user mosh logged
     @State var showSideMenu = false //hane3mlo binding fe el MapActionButton
-    @StateObject var homeVM = HomeViewModel()
+    // @StateObject var homeVM = HomeViewModel()
     @EnvironmentObject var homeViewModel: HomeViewModel
+    var cancalable = Set<AnyCancellable>()
+    
     
     var body: some View {
-       Group{
+        Group{
             if authviewModel.userSession == nil{
                 LoginView()
             }else{
@@ -61,7 +64,7 @@ struct HomeView: View {
                             
                         }
                 }else if mapViewState == .searchingLocation{
-                   // LocationSearchView(mapState: $mapViewState)
+                    // LocationSearchView(mapState: $mapViewState)
                     LocationSearchView()
                     
                 }
@@ -70,10 +73,20 @@ struct HomeView: View {
                     .padding(.leading)
                 
             }
-            
-            if mapViewState == .locationSelected || mapViewState == .polylineAdded{
-                RideRequestView()
-                    .transition(.move(edge: .bottom))//el animation coming from LocalSearchView
+            if let user = authviewModel.currentUser{
+                switch user.accountType {
+                case .passenger:
+                    if mapViewState == .locationSelected || mapViewState == .polylineAdded{
+                        RideRequestView()
+                            .transition(.move(edge: .bottom))//el animation coming from LocalSearchView
+                    }
+                case .driver:
+                    if let trip = homeViewModel.trip {
+                        AcceptTripView(trip: trip)
+                            .transition(.move(edge: .bottom))
+                    }
+                    
+                }
             }
         }
         .onReceive(LocationManager.shared.$userLocation) { location in
@@ -87,6 +100,17 @@ struct HomeView: View {
                 self.mapViewState = .locationSelected
             }//heylisten 3ala el publisher beta3 $selectedUberLocation we law galo meno value hayset el mapstate 3ashan..we hwa 3amel keda 3ashan hwa shal el mapSatet we dah ely kan bey2om belmohema deh fa esta7'dem el onRecieve deh badalha
             
+        }
+        .onReceive(homeViewModel.$trip) { trip in
+            guard let trip = trip else {return}
+            switch trip.state {
+            case .rejected:
+                break
+            case .requested:
+                break
+            case .accepted:
+                break
+            }
         }
     }
 }

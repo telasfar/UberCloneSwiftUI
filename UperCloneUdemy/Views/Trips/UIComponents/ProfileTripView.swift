@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ProfileTripView: View {
+    let name:String
+    let cost:Double
     var body: some View {
         VStack{
             HStack{
@@ -18,7 +20,7 @@ struct ProfileTripView: View {
                     .clipShape(Circle())
                 
                 VStack(alignment: .leading){
-                    Text("AHMED")
+                    Text(name)
                         .font(.title2)
                         .bold()
                     HStack{
@@ -34,7 +36,7 @@ struct ProfileTripView: View {
                 VStack{
                     Text("Earning")
                         .bold()
-                    Text("22.5$")
+                    Text("\(cost)")
                         .font(.title)
                         .bold()//7elwa el bold deh
                 }
@@ -47,5 +49,5 @@ struct ProfileTripView: View {
 }
 
 #Preview {
-    ProfileTripView()
+    ProfileTripView(name: "", cost: 5)
 }
